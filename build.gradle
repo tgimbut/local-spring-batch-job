@@ -1,0 +1,46 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.2.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+bootRun {
+	if ( project.hasProperty('args') ) {
+		args project.args.split('\\s+')
+	}
+	if (project.hasProperty('singleThreadStep') ) {
+		systemProperty "spring.profiles.active", "singleThreadStep"
+	}
+    if (project.hasProperty('multiThreadStep') ) {
+		systemProperty "spring.profiles.active", "multiThreadStep"
+	}
+    if (project.hasProperty('localPartitionedStep') ) {
+		systemProperty "spring.profiles.active", "localPartitionedStep"
+	}
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-batch')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	runtime('org.hsqldb:hsqldb')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
